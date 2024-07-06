@@ -31,7 +31,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   static final List<Widget> _pages = <Widget>[
     StoryPage(title: 'Story Page'),
-    HomePage(title: 'Home Page'),
+    HomePage(title: 'Home Page', ID: 'abra_stone', tier: 'D2', most_tag: ['DP', 'DS', 'graph'], today_solve: 3,),
     PicksPage(title: 'Picks Page'),
   ];
 
@@ -104,6 +104,7 @@ class _MyHomePageState extends State<MyHomePage> {
         selectedLabelStyle: TextStyle(color: Color(0xFFFFA423)),
         unselectedLabelStyle: TextStyle(color: Colors.grey),
       ),
+      backgroundColor: Colors.white,
     );
   }
 }
