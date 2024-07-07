@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:alquerithm/widgets/comment.dart';
 
+import 'add_page.dart';
+import 'my_story_page.dart';
+
 class StoryPage extends StatefulWidget {
   final String title;
 
@@ -25,6 +28,7 @@ class _StoryPageState extends State<StoryPage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  // 북마크
                   IconButton(
                     icon: Icon(
                       _isBookmarked ? Icons.bookmark : Icons.bookmark_border,
@@ -36,6 +40,8 @@ class _StoryPageState extends State<StoryPage> {
                       });
                     },
                   ),
+
+                  // 문제번호랑 화살표버튼
                   Row(
                     children: [
                       IconButton(
@@ -59,6 +65,9 @@ class _StoryPageState extends State<StoryPage> {
                       ),
                     ],
                   ),
+
+
+                  // 햄버거 버튼
                   IconButton(
                     icon: Icon(Icons.menu, color: Colors.orange),
                     onPressed: () {
@@ -83,8 +92,6 @@ class _StoryPageState extends State<StoryPage> {
                 borderRadius: BorderRadius.circular(8.0),
                 color: Colors.white,
               ),
-
-
               child: Row(
                 children: [
                   Icon(Icons.person), // 게시자 이미지 디비에서 가져와 크기 변형해 넣어야 함
@@ -155,15 +162,16 @@ class _StoryPageState extends State<StoryPage> {
             ),
           ],
         ),
+
+
         _showAdditionalButtons
             ? Positioned(
                 right: 15,
                 top: 70,
                 child: Column(
                   children: [
-                    _buildAdditionalButton(Icons.add, '글 게시'),
-                    _buildAdditionalButton(Icons.person, '내 스토리'),
-                    // _buildAdditionalButton(Icons.filter_alt, '필터'),
+                    _buildAdditionalButton(Icons.add, AddPage()),
+                    _buildAdditionalButton(Icons.person, MyStoryPage()),
                   ],
                 ),
               )
@@ -173,16 +181,18 @@ class _StoryPageState extends State<StoryPage> {
   }
 
   // 우상단 햄버거 버튼
-  Widget _buildAdditionalButton(IconData icon, String tooltip) {
+  Widget _buildAdditionalButton(IconData icon, Widget page) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4.0),
       child: FloatingActionButton(
         onPressed: () {
-          // 추가 기능 로직
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => page),
+          );
         },
         backgroundColor: Colors.orange,
         child: Icon(icon),
-        tooltip: tooltip,
       ),
     );
   }
