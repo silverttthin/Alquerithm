@@ -2,6 +2,8 @@ import 'dart:math';
 import 'package:alquerithm/pages/picks_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import '../widgets/font.dart';
+import '../widgets/listViewBuilder.dart';
 
 class HomePage extends StatefulWidget {
   final String title;
@@ -23,21 +25,22 @@ class _HomePageState extends State<HomePage> {
       builder: (BuildContext context) {
         final TextEditingController _textController = TextEditingController();
         return AlertDialog(
+          backgroundColor: Color(0xFFFFFFFF),
           title: Font("하루에 몇 문제를 푸는 것이 목표인가요?", 'M'),
           content: TextField(
             controller: _textController,
             keyboardType: TextInputType.number,
-            decoration: InputDecoration(hintText: 'Enter number here'),
+            decoration: InputDecoration(hintText: '목표 개수를 입력해주세요.'),
           ),
           actions: <Widget>[
             TextButton(
-              child: Text('CANCEL'),
+              child: Font('취소', 'M'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             TextButton(
-              child: Text('OK'),
+              child: Font('확인', 'M'),
               onPressed: () {
                 setState(() {
                   enteredNumber = int.tryParse(_textController.text);
@@ -92,8 +95,6 @@ class _HomePageState extends State<HomePage> {
     todo.add(Container(alignment: Alignment.center, child: TextButton(
       onPressed: () {
         _showNumberInputDialog();
-        // _aimDialog(context);
-        // debugPrint('TextButton pressed');
       },
       style: TextButton.styleFrom(
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
@@ -128,51 +129,3 @@ class _HomePageState extends State<HomePage> {
     return listViewBuilder(todo);
   }
 }
-
-// Widget _aimButton(BuildContext context) {
-//   int _number = 0;
-//
-//
-//
-//
-// }
-
-// Future<dynamic> _aimDialog(BuildContext context) async {
-//   int? enteredNumber;
-//
-//   return showDialog(
-//       context: context,
-//       builder: (BuildContext context) {
-//         final TextEditingController _textController = TextEditingController();
-//         return AlertDialog(
-//           title: Font("하루에 몇 문제를 푸는 것이 목표인가요?"),
-//           content: TextField(
-//             controller: _textController,
-//             keyboardType: TextInputType.number,
-//             decoration: InputDecoration(hintText: 'Enter number here'),
-//           ),
-//           actions: <Widget>[
-//             TextButton(
-//               child: Text('CANCEL'),
-//               onPressed: () {
-//                 Navigator.of(context).pop();
-//               },
-//             ),
-//             TextButton(
-//               child: Text('OK'),
-//               onPressed: () {
-//                 setState(() {
-//                   enteredNumber = int.tryParse(_textController.text);
-//                   if (enteredNumber != null) {
-//                     _number = enteredNumber!;
-//                   }
-//                 });
-//                 Navigator.of(context).pop();
-//               },
-//             ),
-//           ],
-//         );
-//       }
-//   );
-// }
-
