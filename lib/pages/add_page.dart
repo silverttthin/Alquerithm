@@ -79,6 +79,7 @@ class _AddPageState extends State<AddPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text(
           '/<Alquerithm>',
@@ -197,7 +198,7 @@ class _AddPageState extends State<AddPage> {
                   },
                   child: const Text(
                     '취소',
-                    style: TextStyle(color: Colors.black),
+                    style: TextStyle(color: Color(0xFF49454F)),
                   ),
                 ),
                 ElevatedButton(

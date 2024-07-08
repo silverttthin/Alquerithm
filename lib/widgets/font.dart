@@ -7,7 +7,6 @@ Widget backgroundFont(String text, String font) {
       color: Color(0xFFFFF1DE),
       borderRadius: BorderRadius.circular(5),
     ),
-    // color: Color(0xFFFFF1DE),
     child: Font(text.toString(), font),
   );
 }

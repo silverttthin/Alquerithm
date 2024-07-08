@@ -11,7 +11,7 @@ class _CheckLoginState extends State<CheckLogin> {
   bool _isLoggedIn = false;
 
   bool _check() {
-    return false;
+    return true;
   }
 
   @override
