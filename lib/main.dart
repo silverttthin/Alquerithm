@@ -1,3 +1,4 @@
+import 'package:alquerithm/pages/login_page.dart';
 import 'package:flutter/material.dart';
 import 'pages/story_page.dart';
 import 'pages/home_page.dart';
@@ -15,7 +16,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.orange,
       ),
-      home: MyHomePage(),
+      home: CheckLogin(),
     );
   }
 }

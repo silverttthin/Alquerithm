@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../widgets/font.dart';
+import '../widgets/listViewBuilder.dart';
 
 class PicksPage extends StatefulWidget {
   final String title;
@@ -45,46 +47,5 @@ Widget _problemCard(int problemNum) {
       subtitle: Text("$problemSolveNum명이 풀었어요"),
       trailing: Icon(Icons.turned_in),
     ),
-  );
-}
-
-Widget backgroundFont(String text, String font) {
-  return Container(
-    padding: const EdgeInsets.symmetric(horizontal: 3),
-    decoration: BoxDecoration(
-      color: Color(0xFFFFF1DE),
-      borderRadius: BorderRadius.circular(5),
-    ),
-    // color: Color(0xFFFFF1DE),
-    child: Font(text.toString(), font),
-  );
-}
-
-Widget Font(String text, String font) {
-  double size = 0;
-  if (font == "L") size = 20;
-  else if (font == "M") size = 16;
-  else if (font == "S") size = 12;
-  return Text(text, style: TextStyle(fontSize: size), textAlign: TextAlign.center);
-}
-
-Widget listViewBuilder(List<Widget> todo) {
-  return Scaffold(
-      backgroundColor: Colors.white,
-      body: Center(
-        child: Column(
-          children: [
-            Expanded(
-              child: ListView.builder(
-                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                itemCount: todo.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return todo[index];
-                },
-              ),
-            ),
-          ],
-        ),
-      )
   );
 }
