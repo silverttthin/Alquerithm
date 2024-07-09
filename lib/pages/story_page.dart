@@ -32,7 +32,7 @@ class _StoryPageState extends State<StoryPage> {
                   IconButton(
                     icon: Icon(
                       _isBookmarked ? Icons.bookmark : Icons.bookmark_border,
-                      color: Colors.orange,
+                      color: Color(0xFFFFA423),
                     ),
                     onPressed: () {
                       setState(() {
@@ -69,7 +69,7 @@ class _StoryPageState extends State<StoryPage> {
 
                   // 햄버거 버튼
                   IconButton(
-                    icon: Icon(Icons.menu, color: Colors.orange),
+                    icon: Icon(Icons.menu, color: Color(0xFFFFA423)),
                     onPressed: () {
                       setState(() {
                         _showAdditionalButtons = !_showAdditionalButtons;
@@ -134,8 +134,8 @@ class _StoryPageState extends State<StoryPage> {
                 children: [
                   CircleAvatar(
                     radius: 20,
-                    backgroundColor: Colors.orange.shade50,
-                    child: Icon(Icons.person, color: Colors.orange),
+                    backgroundColor: Color(0xFFFFF1DE),
+                    child: Icon(Icons.person, color: Color(0xFFFFA423)),
                   ),
                   SizedBox(width: 8.0),
                   Expanded(
@@ -144,7 +144,7 @@ class _StoryPageState extends State<StoryPage> {
                         hintText: '댓글을 입력하세요',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(24.0),
-                          borderSide: BorderSide(color: Colors.grey),
+                          borderSide: BorderSide(color: Color(0xFF49454F)),
                         ),
                         contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
                       ),
@@ -152,7 +152,7 @@ class _StoryPageState extends State<StoryPage> {
                   ),
                   SizedBox(width: 8.0),
                   IconButton(
-                    icon: Icon(Icons.send, color: Colors.orange),
+                    icon: Icon(Icons.send, color: Color(0xFF49454F)),
                     onPressed: () {
                       // 댓글 전송 로직
                     },
@@ -191,7 +191,8 @@ class _StoryPageState extends State<StoryPage> {
             MaterialPageRoute(builder: (context) => page),
           );
         },
-        backgroundColor: Colors.orange,
+        backgroundColor: Color(0xFFFFA423),
+        foregroundColor: Colors.white,
         child: Icon(icon),
       ),
     );
