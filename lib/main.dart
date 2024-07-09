@@ -1,11 +1,21 @@
 import 'package:alquerithm/pages/login_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'pages/story_page.dart';
 import 'pages/home_page.dart';
 import 'pages/picks_page.dart';
 
-void main() {
+Future main() async {
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  await initialization();
+
   runApp(MyApp());
+}
+
+Future initialization() async {
+  await Future.delayed(const Duration(seconds: 1));
+  FlutterNativeSplash.remove();
 }
 
 class MyApp extends StatelessWidget {

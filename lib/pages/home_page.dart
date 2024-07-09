@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../widgets/font.dart';
 import '../widgets/listViewBuilder.dart';
+import '../widgets/toast.dart';
 
 class HomePage extends StatefulWidget {
   final String title;
@@ -35,7 +36,7 @@ class _HomePageState extends State<HomePage> {
             OutlinedButton(
               style: OutlinedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                foregroundColor: Colors.black,
+                foregroundColor: Color(0xFF49454F),
                 backgroundColor: Colors.white,
                 side: BorderSide(width: 1, color: Color(0xFF49454F)),
               ),
@@ -56,6 +57,7 @@ class _HomePageState extends State<HomePage> {
                   enteredNumber = int.tryParse(_textController.text);
                   if (enteredNumber != null) {
                     _aim_solve = enteredNumber!;
+                    showToast('일일 목표를 $enteredNumber문제로 변경했습니다.');
                   }
                 });
                 Navigator.of(context).pop();
