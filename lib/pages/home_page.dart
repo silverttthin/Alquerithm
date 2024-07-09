@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../widgets/font.dart';
 import '../widgets/listViewBuilder.dart';
 import '../widgets/toast.dart';
@@ -31,6 +32,9 @@ class _HomePageState extends State<HomePage> {
             controller: _textController,
             keyboardType: TextInputType.number,
             decoration: InputDecoration(hintText: '목표 개수를 입력해주세요.'),
+            inputFormatters: [
+              FilteringTextInputFormatter.digitsOnly,
+            ],
           ),
           actions: <Widget>[
             OutlinedButton(
@@ -58,9 +62,11 @@ class _HomePageState extends State<HomePage> {
                   if (enteredNumber != null) {
                     _aim_solve = enteredNumber!;
                     showToast('일일 목표를 $enteredNumber문제로 변경했습니다.');
+                    Navigator.of(context).pop();
+                  } else {
+                    showToast('올바른 값을 입력해주세요.');
                   }
                 });
-                Navigator.of(context).pop();
               },
             ),
           ],
