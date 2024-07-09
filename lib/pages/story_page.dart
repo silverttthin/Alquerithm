@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:alquerithm/widgets/comment.dart';
-
+import '../model/story_model.dart';
+import '../widgets/comment.dart';
 import 'add_page.dart';
 import 'my_story_page.dart';
 
@@ -16,167 +16,207 @@ class StoryPage extends StatefulWidget {
 class _StoryPageState extends State<StoryPage> {
   bool _isBookmarked = false;
   bool _showAdditionalButtons = false;
+  int _currentIndex = 0;
+  List<Post> _posts = [];
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchPosts();
+  }
+
+  Future<void> _fetchPosts() async {
+    ApiService apiService = ApiService();
+    try {
+      List<Post> posts = await apiService.fetchPosts();
+      setState(() {
+        _posts = posts;
+        _isLoading = false;
+      });
+    } catch (e) {
+      // Handle the error appropriately
+      print("Error fetching posts: $e");
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  void _nextPost() {
+    if (_currentIndex < _posts.length - 1) {
+      setState(() {
+        _currentIndex++;
+      });
+    }
+  }
+
+  void _previousPost() {
+    if (_currentIndex > 0) {
+      setState(() {
+        _currentIndex--;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Column(
+    return Scaffold(
+      body: SafeArea(
+        child: Stack(
           children: [
-            Container(
-              padding: EdgeInsets.all(16.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  // 북마크
-                  IconButton(
-                    icon: Icon(
-                      _isBookmarked ? Icons.bookmark : Icons.bookmark_border,
-                      color: Color(0xFFFFA423),
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        _isBookmarked = !_isBookmarked;
-                      });
-                    },
-                  ),
-
-                  // 문제번호랑 화살표버튼
-                  Row(
+            Column(
+              children: [
+                Container(
+                  padding: EdgeInsets.all(16.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
+                      // 북마크
                       IconButton(
-                        icon: Icon(Icons.arrow_back, color: Colors.black),
+                        icon: Icon(
+                          _isBookmarked ? Icons.bookmark : Icons.bookmark_border,
+                          color: Color(0xFFFFA423),
+                        ),
                         onPressed: () {
-                          // 이전 글로 이동하는 로직
+                          setState(() {
+                            _isBookmarked = !_isBookmarked;
+                          });
                         },
                       ),
-                      Text(
-                        '\$문제 번호\$ AC', // 문제번호 데이터 들어가야 하는 곳!!!!!!!!!!!!!
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
+
+                      Row(
+                        children: [
+                          IconButton(
+                            icon: Icon(Icons.arrow_back, color: _currentIndex > 0 ? Colors.black : Colors.grey),
+                            onPressed: _previousPost,
+                          ),
+                          Text(
+                            _posts.isNotEmpty ? '${_posts[_currentIndex].problemNum} [${_posts[_currentIndex].result}]' : '',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.arrow_forward, color: _currentIndex < _posts.length - 1 ? Colors.black : Colors.grey),
+                            onPressed: _nextPost,
+                          ),
+                        ],
                       ),
+
+                      // 햄버거 버튼
                       IconButton(
-                        icon: Icon(Icons.arrow_forward, color: Colors.black),
+                        icon: Icon(Icons.menu, color: Color(0xFFFFA423)),
                         onPressed: () {
-                          // 다음 글로 이동하는 로직
+                          setState(() {
+                            _showAdditionalButtons = !_showAdditionalButtons;
+                          });
                         },
                       ),
                     ],
                   ),
+                ),
 
+                // SingleChildScrollView 적용
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        // 게시글
+                        _isLoading
+                            ? Center(child: CircularProgressIndicator())
+                            : _posts.isNotEmpty
+                            ? Container(
+                          margin: EdgeInsets.all(16.0),
+                          padding: EdgeInsets.all(16.0),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Color(0xFFFFA423), width: 2.0),
+                            borderRadius: BorderRadius.circular(8.0),
+                            color: Colors.white,
+                          ),
+                          child: Row(
+                            children: [
+                              Icon(Icons.person),
+                              SizedBox(width: 8.0),
+                              Expanded(
+                                child: Text(
+                                  _posts[_currentIndex].content,
+                                  style: TextStyle(fontSize: 16),
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                            : Center(child: Text('첫 게시글 주인공이시군요! 주소를 알려주면 선물을 드립니다!')),
 
-                  // 햄버거 버튼
-                  IconButton(
-                    icon: Icon(Icons.menu, color: Color(0xFFFFA423)),
-                    onPressed: () {
-                      setState(() {
-                        _showAdditionalButtons = !_showAdditionalButtons;
-                      });
-                    },
-                  ),
-                ],
-              ),
-            ),
-
-
-
-
-            // 게시글!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
-            Container(
-              margin: EdgeInsets.all(16.0),
-              padding: EdgeInsets.all(16.0),
-              decoration: BoxDecoration(
-                border: Border.all(color: Color(0xFFFFA423), width: 2.0),
-                borderRadius: BorderRadius.circular(8.0),
-                color: Colors.white,
-              ),
-              child: Row(
-                children: [
-                  Icon(Icons.person), // 게시자 이미지 디비에서 가져와 크기 변형해 넣어야 함
-                  SizedBox(width: 8.0),
-                  Expanded(
-                    child: Text( // 게시글 내용으로 바인딩해야함
-                      '이는 흔히 알려진 방법대로 세그먼트 트리 내지는 펜윅트리로 빠르게 구할 수 있다. '
-                      '이런이런 부분에서 구현할 때 주의해줘야된다.',
-                      style: TextStyle(fontSize: 16),
+                        // 댓글창
+                        _posts.isNotEmpty
+                            ? Column(
+                          children: _posts[_currentIndex].comments.map((comment) {
+                            return CommentCard(
+                              text: comment.content,
+                              writer: comment.authorId, // 작성자 이름으로 변경 필요
+                            );
+                          }).toList(),
+                        )
+                            : Container(),
+                      ],
                     ),
                   ),
-                ],
-              ),
-            ),
+                ),
 
-
-            // 댓글창!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
-            Expanded(
-              child: ListView(
-                children: [
-                  CommentCard(
-                      text: '그거 펜윅 안쓰고 투포인터로 밀면 O(N^2)에 돌아요',
-                      likes: 17,
-                      writer: "silverttthin"),
-                  CommentCard(
-                      text: '비재귀 세그 ㄱㄱ', likes: 2, writer: "silverttthin"),
-                  CommentCard(
-                      text: '단조성 관찰 증명이 부족하지만 여백이 부족해 여기에 적진 않겠습니다.',
-                      likes: 24,
-                      writer: "Ferma"),
-                ],
-              ),
-            ),
-
-
-            // 검색창!!!!!!!!!!!!!!!!!!!!!!!!!
-            Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Row(
-                children: [
-                  CircleAvatar(
-                    radius: 20,
-                    backgroundColor: Color(0xFFFFF1DE),
-                    child: Icon(Icons.person, color: Color(0xFFFFA423)),
-                  ),
-                  SizedBox(width: 8.0),
-                  Expanded(
-                    child: TextField(
-                      decoration: InputDecoration(
-                        hintText: '댓글을 입력하세요',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(24.0),
-                          borderSide: BorderSide(color: Color(0xFF49454F)),
-                        ),
-                        contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
+                // 댓글 입력창을 하단에 고정
+                Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 20,
+                        backgroundColor: Color(0xFFFFF1DE),
+                        child: Icon(Icons.person, color: Color(0xFFFFA423)),
                       ),
-                    ),
+                      const SizedBox(width: 8.0),
+                      Expanded(
+                        child: TextField(
+                          decoration: InputDecoration(
+                            hintText: '댓글을 입력하세요',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(24.0),
+                              borderSide: BorderSide(color: Color(0xFF49454F)),
+                            ),
+                            contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8.0),
+                      IconButton(
+                        icon: Icon(Icons.send, color: Color(0xFF49454F)),
+                        onPressed: () {
+                          // 댓글 전송 로직
+                        },
+                      ),
+                    ],
                   ),
-                  SizedBox(width: 8.0),
-                  IconButton(
-                    icon: Icon(Icons.send, color: Color(0xFF49454F)),
-                    onPressed: () {
-                      // 댓글 전송 로직
-                    },
-                  ),
+                ),
+              ],
+            ),
+
+            _showAdditionalButtons
+                ? Positioned(
+              right: 15,
+              top: 70,
+              child: Column(
+                children: [
+                  _buildAdditionalButton(Icons.add, AddPage()),
+                  _buildAdditionalButton(Icons.person, MyStoryPage()),
                 ],
               ),
-            ),
+            )
+                : Container(),
           ],
         ),
-
-
-        _showAdditionalButtons
-            ? Positioned(
-                right: 15,
-                top: 70,
-                child: Column(
-                  children: [
-                    _buildAdditionalButton(Icons.add, AddPage()),
-                    _buildAdditionalButton(Icons.person, MyStoryPage()),
-                  ],
-                ),
-              )
-            : Container(),
-      ],
+      ),
     );
   }
 
@@ -191,7 +231,7 @@ class _StoryPageState extends State<StoryPage> {
             MaterialPageRoute(builder: (context) => page),
           );
         },
-        backgroundColor: Color(0xFFFFA423),
+        backgroundColor: const Color(0xFFFFA423),
         foregroundColor: Colors.white,
         child: Icon(icon),
       ),
