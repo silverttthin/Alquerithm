@@ -43,10 +43,10 @@ dependencies:
 
 flutter_native_splash:
   color: "#FFA423" # background color
-  image: assets/img/question.png # 추가할 이미지 파일 경로를 추가
+  image: assets/img/0.png # 추가할 이미지 파일 경로를 추가
   android_12:
     color: "#FFA423"  # Splash screen background color for Android 12+
-    image: assets/img/question.png  # Splash image for Android 12+
+    image: assets/img/0.png  # Splash image for Android 12+
 
 dev_dependencies:
   flutter_test:

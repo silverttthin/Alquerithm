@@ -10,7 +10,7 @@ Widget problemCard(int problemNum) {
     child: ListTile(
       title: Text("$problemNum번: $problemTitle"),
       subtitle: Text("$problemSolveNum명이 풀었어요"),
-      trailing:  Image.asset('assets/img/G5.png'),
+      trailing:  Image.asset('assets/img/11.png'),
     ),
   );
 }
