@@ -1,9 +1,10 @@
-import 'package:alquerithm/pages/login_page.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'pages/story_page.dart';
 import 'pages/home_page.dart';
 import 'pages/picks_page.dart';
+import 'pages/login_page.dart';
 
 Future main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -40,9 +41,11 @@ class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 1;
   final PageController _pageController = PageController(initialPage: 1);
 
-  static final List<Widget> _pages = <Widget>[
+  final List<Widget> _pages = <Widget>[
     StoryPage(title: 'Story Page'),
-    HomePage(title: 'Home Page', ID: 'abra_stone', tier: 'D2', most_tag: ['DP', 'DS', 'graph'], today_solve: 3,),
+    // HomePage(title: 'Home Page', ID: 'abra_stone', tier: 'D2', most_tag: ['DP', 'DS', 'graph'], today_solve: 3,),
+    HomePage(),
+
     PicksPage(title: 'Picks Page'),
   ];
 
@@ -52,6 +55,14 @@ class _MyHomePageState extends State<MyHomePage> {
     });
     _pageController.animateToPage(index,
         duration: Duration(milliseconds: 250), curve: Curves.easeInOut);
+  }
+
+  Future<void> _logout() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove('jwt_token');
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(builder: (context) => LoginPage()),
+    );
   }
 
   @override
@@ -82,6 +93,12 @@ class _MyHomePageState extends State<MyHomePage> {
             height: 2.0,
           ),
         ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.logout, color: Color(0xFFFFA423)),
+            onPressed: _logout,
+          ),
+        ],
       ),
       body: PageView(
         controller: _pageController,

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class AddPage extends StatefulWidget {
   @override
@@ -42,13 +44,13 @@ class _AddPageState extends State<AddPage> {
   }
 
   // 게시글 제출 전 validation
-  void _storySubmit(){
+  void _storySubmit() {
     if (_problemNumberController.text.isEmpty) {
       _showValidationError('문제 번호를 입력하세요.');
       return;
     }
 
-    if (int.tryParse(_problemNumberController.text) == null){
+    if (int.tryParse(_problemNumberController.text) == null) {
       _showValidationError('문제 번호는 숫자여야합니다.');
       return;
     }
@@ -60,6 +62,20 @@ class _AddPageState extends State<AddPage> {
       _showValidationError('내용을 입력하세요.');
       return;
     }
+
+    // 입력된 값들을 JSON으로 변환
+    Map<String, dynamic> postData = {
+      'problemNum': _problemNumberController.text,
+      'result': _selectedStatus,
+      'codeURL': _codeLinkController.text,
+      'content': _contentController.text,
+    };
+
+    // JSON 데이터 확인
+    print("-------------------------------------------------------------");
+    print(json.encode(postData));
+
+    // 여기에 서버로 데이터를 전송하는 로직 추가 가능
 
     showDialog(
       context: context,
@@ -100,7 +116,6 @@ class _AddPageState extends State<AddPage> {
           ),
         ),
       ),
-
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -166,9 +181,6 @@ class _AddPageState extends State<AddPage> {
               ),
             ),
             SizedBox(height: 16.0),
-
-
-
             // 게시글 내용
             Expanded(
               child: TextField(
@@ -182,12 +194,6 @@ class _AddPageState extends State<AddPage> {
               ),
             ),
             SizedBox(height: 16.0),
-
-
-
-
-
-
             // 취소 및 게시하기 버튼
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
