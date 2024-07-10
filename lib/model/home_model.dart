@@ -28,7 +28,7 @@ class HomeData {
   }
 }
 
-class ApiService {
+class HomeApiService {
   static const String baseUrl = 'http://192.168.227.4:8080';
 
   Future<HomeData> fetchHomeData() async {

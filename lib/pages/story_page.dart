@@ -5,9 +5,6 @@ import 'add_page.dart';
 import 'my_story_page.dart';
 
 class StoryPage extends StatefulWidget {
-  final String title;
-
-  StoryPage({required this.title});
 
   @override
   _StoryPageState createState() => _StoryPageState();

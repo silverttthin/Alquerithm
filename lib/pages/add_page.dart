@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+import '../model/story_model.dart';
+import '../model/post_model.dart';
 
 class AddPage extends StatefulWidget {
   @override
@@ -11,6 +11,7 @@ class _AddPageState extends State<AddPage> {
   final _problemNumberController = TextEditingController();
   final _codeLinkController = TextEditingController();
   final _contentController = TextEditingController();
+  final PostApiService apiService = PostApiService(); // ApiService 인스턴스 생성
 
   String _selectedStatus = 'AC';
   final List<String> _statuses = ['AC', 'WA', 'TLE', 'MLE', 'RE', 'CE', '질문'];
@@ -43,8 +44,7 @@ class _AddPageState extends State<AddPage> {
     );
   }
 
-  // 게시글 제출 전 validation
-  void _storySubmit() {
+  Future<void> _storySubmit() async {
     if (_problemNumberController.text.isEmpty) {
       _showValidationError('문제 번호를 입력하세요.');
       return;
@@ -64,32 +64,31 @@ class _AddPageState extends State<AddPage> {
     }
 
     // 입력된 값들을 JSON으로 변환
-    Map<String, dynamic> postData = {
-      'problemNum': _problemNumberController.text,
-      'result': _selectedStatus,
-      'codeURL': _codeLinkController.text,
-      'content': _contentController.text,
-    };
-
-    // JSON 데이터 확인
-    print("-------------------------------------------------------------");
-    print(json.encode(postData));
-
-    // 여기에 서버로 데이터를 전송하는 로직 추가 가능
-
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('게시 완료!'),
-        );
-      },
+    PostData postData = PostData(
+      problemNum: _problemNumberController.text,
+      result: _selectedStatus,
+      codeURL: _codeLinkController.text,
+      content: _contentController.text,
     );
 
-    Future.delayed(Duration(milliseconds: 850), () {
-      Navigator.of(context).pop();
-      Navigator.of(context).pop();
-    });
+    try {
+      await apiService.submitPost(postData);
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('게시 완료!'),
+          );
+        },
+      );
+
+      Future.delayed(Duration(milliseconds: 850), () {
+        Navigator.of(context).pop();
+        Navigator.of(context).pop();
+      });
+    } catch (e) {
+      _showValidationError('게시 중 오류가 발생했습니다. 다시 시도해주세요.');
+    }
   }
 
   @override
@@ -123,7 +122,6 @@ class _AddPageState extends State<AddPage> {
           children: [
             Row(
               children: [
-                // 문제 번호 입력란
                 Expanded(
                   child: TextField(
                     controller: _problemNumberController,
@@ -136,7 +134,6 @@ class _AddPageState extends State<AddPage> {
                   ),
                 ),
                 SizedBox(width: 6),
-                // 게시글 유형 드롭다운
                 Container(
                   height: 60,
                   decoration: BoxDecoration(
@@ -172,7 +169,6 @@ class _AddPageState extends State<AddPage> {
               ],
             ),
             SizedBox(height: 16.0),
-            // 코드 링크 입력란
             TextField(
               controller: _codeLinkController,
               decoration: InputDecoration(
@@ -181,7 +177,6 @@ class _AddPageState extends State<AddPage> {
               ),
             ),
             SizedBox(height: 16.0),
-            // 게시글 내용
             Expanded(
               child: TextField(
                 controller: _contentController,
@@ -194,7 +189,6 @@ class _AddPageState extends State<AddPage> {
               ),
             ),
             SizedBox(height: 16.0),
-            // 취소 및 게시하기 버튼
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [

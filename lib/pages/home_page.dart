@@ -18,7 +18,7 @@ class _HomePageState extends State<HomePage> {
   late int _alias_num;
   late int _today_solved;
   bool _isLoading = true;
-  final ApiService apiService = ApiService(); // ApiService 인스턴스 생성
+  final HomeApiService apiService = HomeApiService(); // ApiService 인스턴스 생성
 
   @override
   void initState() {
