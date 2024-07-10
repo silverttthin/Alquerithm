@@ -42,7 +42,7 @@ class _MyHomePageState extends State<MyHomePage> {
   final PageController _pageController = PageController(initialPage: 1);
 
   final List<Widget> _pages = <Widget>[
-    StoryPage(title: 'Story Page'),
+    StoryPage(),
     // HomePage(title: 'Home Page', ID: 'abra_stone', tier: 'D2', most_tag: ['DP', 'DS', 'graph'], today_solve: 3,),
     HomePage(),
 
