@@ -1,13 +1,10 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 import 'package:flutter/services.dart';
-
 import '../widgets/font.dart';
 import '../widgets/listViewBuilder.dart';
 import '../widgets/toast.dart';
+import '../model/home_model.dart'; // 홈 모델 임포트
 
 class HomePage extends StatefulWidget {
   @override
@@ -21,6 +18,7 @@ class _HomePageState extends State<HomePage> {
   late int _alias_num;
   late int _today_solved;
   bool _isLoading = true;
+  final ApiService apiService = ApiService(); // ApiService 인스턴스 생성
 
   @override
   void initState() {
@@ -29,34 +27,30 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _fetchHomeData() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? token = prefs.getString('jwt_token');
-
-    final response = await http.get(
-      Uri.parse('http://192.168.227.4:8080/users/home'),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token',
-      },
-    );
-
-    if (response.statusCode == 200) {
-      final data = json.decode(utf8.decode(response.bodyBytes));
+    try {
+      HomeData homeData = await apiService.fetchHomeData();
       setState(() {
-        _boj_username = data['boj_username'];
-        _tier = data['tier'];
-        _user_tags = List<String>.from(data['user_tags']);
-        _alias_num = data['alias_num'];
-        _today_solved = data['today_solved'];
+        _boj_username = homeData.bojUsername;
+        _tier = homeData.tier;
+        _user_tags = homeData.userTags;
+        _alias_num = homeData.aliasNum;
+        _today_solved = homeData.todaySolved;
         _isLoading = false;
       });
-    } else {
-      print('Failed to load home data');
+    } catch (e) {
+      print('Failed to load home data: $e');
     }
   }
 
   String tierIntToStr(int tier) {
-    List<String> _tierFirstChar = ['Bronze', 'Silver', 'Gold', 'Platinum', 'Diamond', 'Ruby'];
+    List<String> _tierFirstChar = [
+      'Bronze',
+      'Silver',
+      'Gold',
+      'Platinum',
+      'Diamond',
+      'Ruby'
+    ];
     tier -= 1;
     return _tierFirstChar[tier ~/ 5] + (5 - tier % 5).toString();
   }
@@ -81,7 +75,8 @@ class _HomePageState extends State<HomePage> {
           actions: <Widget>[
             OutlinedButton(
               style: OutlinedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                 foregroundColor: Color(0xFF49454F),
                 backgroundColor: Colors.white,
                 side: BorderSide(width: 1, color: Color(0xFF49454F)),
@@ -93,7 +88,8 @@ class _HomePageState extends State<HomePage> {
             ),
             TextButton(
               style: TextButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                 foregroundColor: Colors.white,
                 backgroundColor: Color(0xFF49454F),
               ),
@@ -161,101 +157,66 @@ class _HomePageState extends State<HomePage> {
     }
 
     int remainSolve = max(0, _alias_num - _today_solved);
-    List<Widget> todo = [];
-    todo.add(Icon(Icons.account_circle, color: Color(0xFFFFF1DE), size: 170));
-    todo.add(
+    List<Widget> todo = [
+      Icon(Icons.account_circle, color: Color(0xFFFFF1DE), size: 170),
       Wrap(
         alignment: WrapAlignment.center,
         children: [
           buildInfoBox("$_boj_username님의 현재 티어는 ${tierIntToStr(_tier)}입니다."),
         ],
       ),
-    );
-    List<Widget> temp = [];
-    for (int i = 0; i < min(3, _user_tags.length); i++) {
-      temp.add(buildInfoBox('#' + _user_tags[i]));
-    }
-    todo.add(
       Wrap(
         alignment: WrapAlignment.center,
         children: [
-          for (int i = 0; i < temp.length; i++) temp[i],
+          for (int i = 0; i < min(3, _user_tags.length); i++)
+            buildInfoBox('#' + _user_tags[i]),
           buildInfoBox(" 고수네요."),
         ],
       ),
-    );
-    todo.add(SizedBox(height: 25));
-    todo.add(
+      SizedBox(height: 25),
       Wrap(
         alignment: WrapAlignment.center,
         children: [
-          buildInfoBox("오늘 $_today_solved 문제를 풀었으며,")
+          buildInfoBox("오늘 $_today_solved 문제를 풀었으며,"),
         ],
       ),
-    );
-    if (remainSolve <= 0) {
-      todo.add(buildInfoBox('오늘 목표를 달성하셨습니다!'));
-    } else {
-      todo.add(Wrap(
-        alignment: WrapAlignment.center,
-        children: [
-          buildInfoBox("목표 달성까지 $remainSolve 문제 남았습니다."),
-        ],
-      ));
-    }
-    todo.add(SizedBox(height: 5));
-    todo.add(Container(
-      alignment: Alignment.center,
-      child: TextButton(
-        onPressed: () {
-          _showNumberInputDialog();
-        },
-        style: TextButton.styleFrom(
-          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-          foregroundColor: Colors.white,
-          backgroundColor: Color(0xFF49454F),
+      if (remainSolve <= 0)
+        buildInfoBox('오늘 목표를 달성하셨습니다!')
+      else
+        Wrap(
+          alignment: WrapAlignment.center,
+          children: [
+            buildInfoBox("목표 달성까지 $remainSolve 문제 남았습니다."),
+          ],
         ),
-        child: const Text('목표 수정하기'),
+      SizedBox(height: 5),
+      Container(
+        alignment: Alignment.center,
+        child: TextButton(
+          onPressed: _showNumberInputDialog,
+          style: TextButton.styleFrom(
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+            foregroundColor: Colors.white,
+            backgroundColor: Color(0xFF49454F),
+          ),
+          child: const Text('목표 수정하기'),
+        ),
       ),
-    ));
-    todo.add(SizedBox(height: 25));
-    todo.add(Font("다른 사람들은 지금...", 'L'));
-    todo.add(SizedBox(height: 5));
-    List<Color> rankColor = [Color(0xFFF1C16C), Color(0xFFB7C1CB), Color(0xFFCD9A6B)];
-    List<String> rank = ['1st', '2nd', '3rd'];
-    List<String> ranking = ['azberjibiou', 'songc', 'ho94949'];
-    ranking = [];
-    List<int> rankingNum = [10, 6, 5];
-    for (int i = 0; i < min(ranking.length, 3); i++) {
-      todo.add(
-        Container(
-          padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 15),
-          child: Card(
-            color: rankColor[i],
-            child: ListTile(
-              leading: Icon(Icons.account_circle, color: Color(0xFFFFF1DE), size: 50),
-              title: Font(ranking[i], 'M'),
-              subtitle: Font('오늘 ${rankingNum[i]}문제 해결', 'S'),
-              trailing: Font(rank[i], 'M'),
-            ),
+      SizedBox(height: 25),
+      Font("다른 사람들은 지금...", 'L'),
+      SizedBox(height: 5),
+      Container(
+        padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 15),
+        child: Card(
+          color: Color(0xFFE3E3E3),
+          child: ListTile(
+            title: Font('아직 아무도 문제를 풀지 않았어요.', 'M'),
+            subtitle: Font('지금 문제 풀면 1등!', 'M'),
           ),
         ),
-      );
-    }
-    if (ranking.isEmpty) {
-      todo.add(
-        Container(
-          padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 15),
-          child: Card(
-            color: Color(0xFFE3E3E3),
-            child: ListTile(
-              title: Font('아직 아무도 문제를 풀지 않았어요.', 'M'),
-              subtitle: Font('지금 문제 풀면 1등!', 'M'),
-            ),
-          ),
-        ),
-      );
-    }
+      ),
+    ];
+
     return listViewBuilder(todo);
   }
 }
