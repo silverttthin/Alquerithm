@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'font.dart';
+
 Widget problemCard(int problemNum, String title, int problemSolveNum, int level) {
   int problemSolveNum = 1000000;
   // bool problemSolved = false;
@@ -13,9 +15,9 @@ Widget problemCard(int problemNum, String title, int problemSolveNum, int level)
     color: Color(0xFFFFFFFF),
 
     child: ListTile(
-      title: Text("$problemNum번: $title"),
-      subtitle: Text("$problemSolveNum명이 풀었어요"),
-      trailing:  Image.asset('assets/img/$level.png'),
+      title: Wrap(alignment: WrapAlignment.start, runSpacing: 5, children: [Font("$problemNum번: $title", 'M')]),
+      subtitle: Wrap(alignment: WrapAlignment.start, runSpacing: 5, children: [Font("$problemSolveNum명이 풀었어요", 'S')]),
+      trailing: Image.asset('assets/img/$level.png'),
     ),
   );
 }

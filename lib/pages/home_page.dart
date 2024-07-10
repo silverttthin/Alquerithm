@@ -160,8 +160,13 @@ class _HomePageState extends State<HomePage> {
 
     double _runSpace = 5;
     double _contentsSpace = 25;
+
     List<Widget> todo = [];
+
+    // 아이콘
     todo.add(Icon(Icons.account_circle, color: Color(0xFFFFF1DE), size: 170));
+
+    // 사용자 정보 - 티어
     todo.add(
       Wrap(alignment: WrapAlignment.center, runSpacing: _runSpace, children: [
         backgroundFont(_boj_username, 'L'),
@@ -171,25 +176,33 @@ class _HomePageState extends State<HomePage> {
       ],),
     );
     todo.add(SizedBox(height: _contentsSpace,));
+
+    // 사용자 정보 - 태그
     List<Widget> temp = [];
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < min(3, _user_tags.length); i++) {
       if (i > 0) temp.add(Font(', ', 'L'));
       temp.add(backgroundFont('#' + _user_tags[i], 'L'));
     }
-    todo.add(
-      Wrap(alignment: WrapAlignment.center, runSpacing: _runSpace, children: [
-        for (int i = 0; i < temp.length; i++) temp[i],
-        Font(" 고수네요.", 'L'),
-      ],),
-    );
+    if (_user_tags.length == 0) {
+      todo.add(Wrap(alignment: WrapAlignment.center, runSpacing: _runSpace, children: [Font('아직 푼 문제가 없어요.', 'L')]));
+    } else {
+      todo.add(
+        Wrap(alignment: WrapAlignment.center, runSpacing: _runSpace, children: [
+          for (int i = 0; i < temp.length; i++) temp[i],
+          Font(" 고수네요.", 'L'),
+        ],),
+      );
+    }
     todo.add(SizedBox(height: _contentsSpace,));
+
+    // 사용자 정보 - 푼 문제 수
     todo.add(
         Wrap(alignment: WrapAlignment.center, runSpacing: _runSpace, children: [
           Font("오늘 ", 'L'), backgroundFont(_today_solved.toString(), 'L'), Font("문제를 풀었으며,", 'L')
         ],)
     );
     if (remainSolve <= 0) {
-      todo.add(Font('오늘 목표를 달성하셨습니다!', 'L'));
+      todo.add(Font('오늘 목표를 달성했습니다!', 'L'));
     } else {
       todo.add(Wrap(alignment: WrapAlignment.center, runSpacing: _runSpace, children: [
         Font("목표 달성까지 ", 'L'),
@@ -209,6 +222,8 @@ class _HomePageState extends State<HomePage> {
       ),
       child: const Text('목표 수정하기'),
     )));
+
+    // 랭킹
     todo.add(SizedBox(height: _contentsSpace + 5,));
     todo.add(Font("다른 사람들은 지금...", 'L', bold: true));
     todo.add(SizedBox(height: 5,));
@@ -247,68 +262,7 @@ class _HomePageState extends State<HomePage> {
           )
       );
     }
+
     return listViewBuilder(todo);
-
-    // List<Widget> todo = [
-    //   Icon(Icons.account_circle, color: Color(0xFFFFF1DE), size: 170),
-    //   Wrap(
-    //     alignment: WrapAlignment.center,
-    //     children: [
-    //       buildInfoBox("$_boj_username님의 현재 티어는 ${tierIntToStr(_tier)}입니다."),
-    //     ],
-    //   ),
-    //   Wrap(
-    //     alignment: WrapAlignment.center,
-    //     children: [
-    //       for (int i = 0; i < min(3, _user_tags.length); i++)
-    //         buildInfoBox('#' + _user_tags[i]),
-    //       buildInfoBox(" 고수네요."),
-    //     ],
-    //   ),
-    //   SizedBox(height: 25),
-    //   Wrap(
-    //     alignment: WrapAlignment.center,
-    //     children: [
-    //       buildInfoBox("오늘 $_today_solved 문제를 풀었으며,"),
-    //     ],
-    //   ),
-    //   if (remainSolve <= 0)
-    //     buildInfoBox('오늘 목표를 달성하셨습니다!')
-    //   else
-    //     Wrap(
-    //       alignment: WrapAlignment.center,
-    //       children: [
-    //         buildInfoBox("목표 달성까지 $remainSolve 문제 남았습니다."),
-    //       ],
-    //     ),
-    //   SizedBox(height: 5),
-    //   Container(
-    //     alignment: Alignment.center,
-    //     child: TextButton(
-    //       onPressed: _showNumberInputDialog,
-    //       style: TextButton.styleFrom(
-    //         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-    //         foregroundColor: Colors.white,
-    //         backgroundColor: Color(0xFF49454F),
-    //       ),
-    //       child: const Text('목표 수정하기'),
-    //     ),
-    //   ),
-    //   SizedBox(height: 25),
-    //   Font("다른 사람들은 지금...", 'L'),
-    //   SizedBox(height: 5),
-    //   Container(
-    //     padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 15),
-    //     child: Card(
-    //       color: Color(0xFFE3E3E3),
-    //       child: ListTile(
-    //         title: Font('아직 아무도 문제를 풀지 않았어요.', 'M'),
-    //         subtitle: Font('지금 문제 풀면 1등!', 'M'),
-    //       ),
-    //     ),
-    //   ),
-    // ];
-
-    // return listViewBuilder(todo);
   }
 }
