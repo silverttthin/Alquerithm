@@ -51,23 +51,55 @@ class _PicksPageState extends State<PicksPage> {
       return Center(child: CircularProgressIndicator());
     }
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Center(
-        child: Column(
-          children: [
-            SizedBox(height: 10),
-            Row(children: [SizedBox(width: 5), Font("오늘의 추천 문제예요", 'L')]),
-            ..._pick_problems.map((problem) => problemCard(problem, 'abc', 1234, 14)).toList(),
-            SizedBox(height: 20),
-            Row(children: [SizedBox(width: 5), backgroundFont('#' + _least_tag, 'M'), Font(" 공부는 어떤가요?", 'L')]),
-            ..._least_tag_problems.map((problem) => problemCard(problem, 'abc', 1234, 14)).toList(),
-            SizedBox(height: 20),
-            Row(children: [SizedBox(width: 5), Font("도전적인 ", 'L'), backgroundFont('#' + _most_tag, 'M'), Font(" 문제예요", 'L')]),
-            ..._most_tag_problems.map((problem) => problemCard(problem, 'abc', 1234, 14)).toList(),
-          ],
-        ),
-      ),
+    double _runSpace = 5;
+    double _contentsSpace = 30;
+    double _lineSpace = 10;
+    List<Widget> todo = [];
+
+    todo.add(SizedBox(height: _lineSpace,));
+
+    todo.add(Wrap(alignment: WrapAlignment.start, runSpacing: _runSpace, children: [SizedBox(width: 5), Font("오늘의 추천 문제예요", 'XL', bold: true)]),);
+    todo.add(SizedBox(height: _lineSpace,));
+    todo.addAll(_makeProblemCards(_pick_problems));
+    todo.add(SizedBox(height: _contentsSpace,));
+
+    todo.add(Wrap(alignment: WrapAlignment.start, runSpacing: _runSpace, children: [SizedBox(width: 5), backgroundFont('#' + _least_tag, 'XL'), Font(" 공부는 어떤가요?", 'XL', bold: true)]),);
+    todo.add(SizedBox(height: _lineSpace,));
+    todo.addAll(_makeProblemCards(_least_tag_problems));
+    todo.add(SizedBox(height: _contentsSpace,));
+
+    todo.add(Wrap(alignment: WrapAlignment.start, runSpacing: _runSpace, children: [SizedBox(width: 5), Font("도전적인 ", 'XL', bold: true), backgroundFont('#' + _most_tag, 'XL'), Font(" 문제예요", 'XL', bold: true)]),);
+    todo.add(SizedBox(height: _lineSpace,));
+    todo.addAll(_makeProblemCards(_most_tag_problems));
+    todo.add(SizedBox(height: _lineSpace,));
+
+    return listViewBuilder(todo);
+  }
+}
+
+List<Widget> _makeProblemCards(List<String> problems, {double runSpace = 5}) {
+  List<Widget> ret = [];
+  for (int i = 0; i < min(3, problems.length); i++) {
+    ret.add(problemCard(problems[i], 'abc', 1234, 14));
+    ret.add(SizedBox(height: runSpace,));
+  }
+  if (problems.length == 0) {
+    ret.add(
+        Container(
+          padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 15),
+          child: Card(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+              side: BorderSide(width: 1.5, color: Color(0xFFE3E3E3)),
+            ),
+            color: Color(0xFFFFFFFF),
+
+            child: ListTile(
+              title: Font('추천 문제가 없어요.', 'M'),
+            ),
+          ),
+        )
     );
   }
+  return ret;
 }
