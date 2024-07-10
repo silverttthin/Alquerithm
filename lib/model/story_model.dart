@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 class Post {
@@ -58,11 +59,11 @@ class Comment {
 }
 
 
-class ApiService {
+class StoryApiService {
   static const String baseUrl = 'http://192.168.227.4:8080';
 
   Future<List<Post>> fetchPosts() async {
-    final response = await http.get(Uri.parse('$baseUrl/posts'));
+    final response = await http.get(Uri.parse('$baseUrl/posts/'));
 
     if (response.statusCode == 200) {
       Map<String, dynamic> body = json.decode(utf8.decode(response.bodyBytes));
@@ -71,6 +72,24 @@ class ApiService {
       return posts.map((dynamic item) => Post.fromJson(item)).toList();
     } else {
       throw Exception('Failed to load posts');
+    }
+  }
+
+  Future<void> postComment(String postId, String content) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('jwt_token');
+
+    final response = await http.post(
+      Uri.parse('$baseUrl/comments/$postId/'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: json.encode({'content': content}),
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to post comment');
     }
   }
 }
