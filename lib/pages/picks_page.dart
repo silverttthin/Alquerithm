@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import '../widgets/font.dart';
 import '../widgets/listViewBuilder.dart';
@@ -56,24 +58,37 @@ class _PicksPageState extends State<PicksPage> {
       return Center(child: CircularProgressIndicator());
     }
 
-    List<Widget> todo = [
-      Row(children: [SizedBox(width: 5), Font("오늘의 추천 문제예요", 'L')]),
-      problemCard(_pickProblems[0], 'abc', 1234, 14),
-      problemCard(_pickProblems[1], 'abc', 1234, 14),
-      problemCard(_pickProblems[2], 'abc', 1234, 14),
+    double _runSpace = 5;
+    double _contentsSpace = 30;
+    double _lineSpace = 10;
+    List<Widget> todo = [];
 
-      SizedBox(height: 20,),
-      Row(children: [SizedBox(width: 5), backgroundFont('#' + _leastTag, 'M'), Font(" 공부는 어떤가요?", 'L')]),
-      problemCard(_leastTagProblems[0], 'abc', 1234, 14),
-      problemCard(_leastTagProblems[1], 'abc', 1234, 14),
-      problemCard(_leastTagProblems[2], 'abc', 1234, 14),
+    todo.add(SizedBox(height: _lineSpace,));
 
-      SizedBox(height: 20,),
-      Row(children: [SizedBox(width: 5), Font("도전적인 ", 'L'), backgroundFont('#' + _mostTag, 'M'), Font(" 문제예요", 'L')]),
-      problemCard(_mostTagProblems[0], 'abc', 1234, 14),
-      problemCard(_mostTagProblems[1], 'abc', 1234, 14),
-      problemCard(_mostTagProblems[2], 'abc', 1234, 14),
-    ];
+    todo.add(Wrap(alignment: WrapAlignment.start, runSpacing: _runSpace, children: [SizedBox(width: 5), Font("오늘의 추천 문제예요", 'XL', bold: true)]),);
+    todo.add(SizedBox(height: _lineSpace,));
+    for (int i = 0; i < min(3, _pickProblems.length); i++) {
+      todo.add(problemCard(_pickProblems[i], 'abc', 1234, 14));
+      todo.add(SizedBox(height: _runSpace,));
+    }
+    todo.add(SizedBox(height: _contentsSpace,));
+
+    todo.add(Wrap(alignment: WrapAlignment.start, runSpacing: _runSpace, children: [SizedBox(width: 5), backgroundFont('#' + _leastTag, 'XL'), Font(" 공부는 어떤가요?", 'XL', bold: true)]),);
+    todo.add(SizedBox(height: _lineSpace,));
+    for (int i = 0; i < min(3, _leastTagProblems.length); i++) {
+      todo.add(problemCard(_leastTagProblems[i], 'abc', 1234, 14));
+      todo.add(SizedBox(height: _runSpace,));
+    }
+    todo.add(SizedBox(height: _contentsSpace,));
+
+    todo.add(Wrap(alignment: WrapAlignment.start, runSpacing: _runSpace, children: [SizedBox(width: 5), Font("도전적인 ", 'XL', bold: true), backgroundFont('#' + _mostTag, 'XL'), Font(" 문제예요", 'XL', bold: true)]),);
+    todo.add(SizedBox(height: _lineSpace,));
+    for (int i = 0; i < min(3, _mostTagProblems.length); i++) {
+      todo.add(problemCard(_mostTagProblems[i], 'abc', 1234, 14));
+      todo.add(SizedBox(height: _runSpace,));
+    }
+
+    todo.add(SizedBox(height: _lineSpace,));
 
     return listViewBuilder(todo);
   }
