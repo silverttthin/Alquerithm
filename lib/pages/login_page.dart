@@ -69,7 +69,7 @@ class _LoginPageState extends State<LoginPage> {
               children: [
                 CircularProgressIndicator(),
                 SizedBox(width: 16),
-                Text("백준 정보를 가져오는 중이에요.."),
+                Text("백준 로그인 중.."),
               ],
             ),
           ),
@@ -90,7 +90,7 @@ class _LoginPageState extends State<LoginPage> {
       final responseBody = json.decode(response.body);
       final token = responseBody['access_token'];
       print("--------------------------------------------------------------");
-      print("token -> $token");
+      print("token at login -> $token");
       // SharedPreferences에 토큰 저장
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setString('jwt_token', token);
@@ -243,7 +243,7 @@ class _RegisterPageState extends State<RegisterPage> {
               children: [
                 CircularProgressIndicator(),
                 SizedBox(width: 16),
-                Text("백준 정보를 가져와 저장 중이에요.."),
+                Text("회원가입 중.."),
               ],
             ),
           ),

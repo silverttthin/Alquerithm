@@ -44,12 +44,12 @@ class _HomePageState extends State<HomePage> {
 
   String tierIntToStr(int tier) {
     List<String> _tierFirstChar = [
-      'Bronze',
-      'Silver',
-      'Gold',
-      'Platinum',
-      'Diamond',
-      'Ruby'
+      'Bronze ',
+      'Silver ',
+      'Gold ',
+      'Platinum ',
+      'Diamond ',
+      'Ruby '
     ];
     tier -= 1;
     return _tierFirstChar[tier ~/ 5] + (5 - tier % 5).toString();
