@@ -3,11 +3,11 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PickData {
-  late List<String> pick_problems;
+  late List<List<dynamic>> pick_problems;
   late String least_tag;
-  late List<String> least_tag_problems;
+  late List<List<dynamic>> least_tag_problems;
   late String most_tag;
-  late List<String> most_tag_problems;
+  late List<List<dynamic>> most_tag_problems;
 
   PickData({
     required this.pick_problems,
@@ -19,11 +19,11 @@ class PickData {
 
   factory PickData.fromJson(Map<String, dynamic> json) {
     return PickData(
-      pick_problems: List<String>.from(json['pick_problem']),
+      pick_problems: List<List<dynamic>>.from(json['pick_problems']),
       least_tag: json['least_tag'],
-      least_tag_problems: List<String>.from(json['least_tag_problem']),
+      least_tag_problems: List<List<dynamic>>.from(json['least_tag_problems']),
       most_tag: json['most_tag'],
-      most_tag_problems: List<String>.from(json['most_tag_problem']),
+      most_tag_problems: List<List<dynamic>>.from(json['most_tag_problems']),
     );
   }
 }
@@ -43,7 +43,7 @@ class PickApiService {
     );
 
     if (response.statusCode == 200) {
-      return PickData.fromJson(json.decode(response.body));
+      return PickData.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
     } else {
       throw Exception('Failed to load pick data');
     }

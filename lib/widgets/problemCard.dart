@@ -5,7 +5,6 @@ import 'font.dart';
 
 Widget problemCard(String problemNum, String title, int problemSolveNum, int level) {
   int integerNum = int.parse(problemNum);
-  int problemSolveNum = 1000000;
   bool problemSolved = (integerNum % 2 == 0);
   return Card(
 // color: problemSolved ? Color(0xFFDEFFDE) : Color(0xFFE3E3E3),
