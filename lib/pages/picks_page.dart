@@ -1,5 +1,8 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import '../widgets/font.dart';
+import '../widgets/listViewBuilder.dart';
 import '../widgets/problemCard.dart';
 import 'package:alquerithm/model/home_model.dart';
 import 'package:alquerithm/model/pick_model.dart'; // PickApiService 및 PickData 가져오기
