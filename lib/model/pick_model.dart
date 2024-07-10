@@ -3,27 +3,27 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PickData {
-  late List<int> pickProblems;
-  late String leastTag;
-  late List<int> leastTagProblems;
-  late String mostTag;
-  late List<int> mostTagProblems;
+  late List<String> pick_problems;
+  late String least_tag;
+  late List<String> least_tag_problems;
+  late String most_tag;
+  late List<String> most_tag_problems;
 
   PickData({
-    required this.pickProblems,
-    required this.leastTag,
-    required this.leastTagProblems,
-    required this.mostTag,
-    required this.mostTagProblems,
+    required this.pick_problems,
+    required this.least_tag,
+    required this.least_tag_problems,
+    required this.most_tag,
+    required this.most_tag_problems,
   });
 
   factory PickData.fromJson(Map<String, dynamic> json) {
     return PickData(
-      pickProblems: List<int>.from(json['pick_problem']),
-      leastTag: json['least_tag'],
-      leastTagProblems: List<int>.from(json['least_tag_problem']),
-      mostTag: json['most_tag'],
-      mostTagProblems: List<int>.from(json['most_tag_problem']),
+      pick_problems: List<String>.from(json['pick_problem']),
+      least_tag: json['least_tag'],
+      least_tag_problems: List<String>.from(json['least_tag_problem']),
+      most_tag: json['most_tag'],
+      most_tag_problems: List<String>.from(json['most_tag_problem']),
     );
   }
 }
@@ -35,7 +35,6 @@ class PickApiService {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('jwt_token');
 
-    print("제발 token : $token");
     final response = await http.get(
       Uri.parse("$apiUrl/users/picks/"),
       headers: {
