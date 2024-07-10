@@ -1,8 +1,5 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import '../widgets/font.dart';
-import '../widgets/listViewBuilder.dart';
 import '../widgets/problemCard.dart';
 import 'package:alquerithm/model/home_model.dart';
 import 'package:alquerithm/model/pick_model.dart'; // PickApiService 및 PickData 가져오기
@@ -13,11 +10,11 @@ class PicksPage extends StatefulWidget {
 }
 
 class _PicksPageState extends State<PicksPage> {
-  late List<int> _pick_problems;
+  late List<String> _pick_problems;
   late String _least_tag;
-  late List<int> _least_tag_problems;
+  late List<String> _least_tag_problems;
   late String _most_tag;
-  late List<int> _most_tag_problems;
+  late List<String> _most_tag_problems;
 
   bool _isLoading = true;
 
@@ -80,7 +77,7 @@ class _PicksPageState extends State<PicksPage> {
   }
 }
 
-List<Widget> _makeProblemCards(List<int> problems, {double runSpace = 5}) {
+List<Widget> _makeProblemCards(List<String> problems, {double runSpace = 5}) {
   List<Widget> ret = [];
   for (int i = 0; i < min(3, problems.length); i++) {
     ret.add(problemCard(problems[i], 'abc', 1234, 14));

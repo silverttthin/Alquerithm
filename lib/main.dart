@@ -46,7 +46,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // HomePage(title: 'Home Page', ID: 'abra_stone', tier: 'D2', most_tag: ['DP', 'DS', 'graph'], today_solve: 3,),
     HomePage(),
 
-    PicksPage(title: 'Picks Page'),
+    PicksPage(),
   ];
 
   void _onItemTapped(int index) {
