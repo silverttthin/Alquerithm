@@ -33,7 +33,7 @@
 
 Flutter            |  FastAPI            | MongoDB
 :-------------------------:|:-------------------------:|:-----------------------------:
-![](https://img.icons8.com/?size=100&id=pCvIfmctRaY8&format=png&color=000000)  |  <img width="100" alt="image" src="https://github.com/silverttthin/Scrumble/assets/83443857/61f28bd5-6e35-4c21-bc5c-870c76a9a008"> | ![](https://img.icons8.com/?size=100&id=bosfpvRzNOG8&format=png&color=000000)
+![](https://img.icons8.com/?size=100&id=pCvIfmctRaY8&format=png&color=000000)  |  <img width="100" alt="image" src="https://cdn.worldvectorlogo.com/logos/fastapi-1.svg"> | ![](https://img.icons8.com/?size=100&id=bosfpvRzNOG8&format=png&color=000000)
 
 ## APK Download
 
