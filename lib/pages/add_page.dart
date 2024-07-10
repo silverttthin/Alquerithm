@@ -84,7 +84,7 @@ class _AddPageState extends State<AddPage> {
 
       Future.delayed(Duration(milliseconds: 850), () {
         Navigator.of(context).pop();
-        Navigator.of(context).pop();
+        Navigator.of(context).pop(true);
       });
     } catch (e) {
       _showValidationError('게시 중 오류가 발생했습니다. 다시 시도해주세요.');

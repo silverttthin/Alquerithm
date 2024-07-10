@@ -40,6 +40,29 @@ class _StoryPageState extends State<StoryPage> {
     }
   }
 
+  Future<void> _navigateToAddPage() async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => AddPage()),
+    );
+
+    if (result == true) {
+      _fetchPosts();
+    }
+  }
+
+  Future<void> _navigateToMyStoryPage() async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => MyStoryPage()),
+    );
+
+    if (result == true) {
+      // _fetchPosts();
+    }
+  }
+
+
   void _nextPost() {
     if (_currentIndex < _posts.length - 1) {
       setState(() {
@@ -205,8 +228,9 @@ class _StoryPageState extends State<StoryPage> {
               top: 70,
               child: Column(
                 children: [
-                  _buildAdditionalButton(Icons.add, AddPage()),
-                  _buildAdditionalButton(Icons.person, MyStoryPage()),
+                  // _buildAdditionalButton(Icons.add, AddPage()),
+                  _buildAdditionalButton(Icons.add, _navigateToAddPage),
+                  _buildAdditionalButton(Icons.person, _navigateToMyStoryPage),
                 ],
               ),
             )
@@ -218,15 +242,12 @@ class _StoryPageState extends State<StoryPage> {
   }
 
   // 우상단 햄버거 버튼
-  Widget _buildAdditionalButton(IconData icon, Widget page) {
+  Widget _buildAdditionalButton(IconData icon, Function onPressed) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4.0),
       child: FloatingActionButton(
         onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => page),
-          );
+          onPressed();
         },
         backgroundColor: const Color(0xFFFFA423),
         foregroundColor: Colors.white,
