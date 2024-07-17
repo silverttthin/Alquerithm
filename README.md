@@ -43,7 +43,7 @@ Flutter            |  FastAPI            | MongoDB
 
 |<img src="https://avatars.githubusercontent.com/u/83443857?v=4" width="150" height="150"/>|<img src="https://avatars.githubusercontent.com/u/24761111?v=4" width="150" height="150"/>|
 |:-:|:-:|
-|Lee Si woong<br/>[@silverttthin](https://github.com/silverttthin)|Lee Ye rin<br/>[@RGLie](https://github.com/abrastone)|
+|Lee Si woong<br/>[@silverttthin](https://github.com/silverttthin)|Lee Yerin<br/>[@abrastone](https://github.com/abrastone)|
 
 
 
